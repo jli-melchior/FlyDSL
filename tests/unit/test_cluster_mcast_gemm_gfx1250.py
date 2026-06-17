@@ -13,9 +13,6 @@ compile_wmma_gemm_tdm with cluster parameters. See
 temp-doc/cluster_mcast_gemm_known_issue.md for details.
 """
 
-import os
-import sys
-
 import pytest
 
 try:

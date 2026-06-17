@@ -96,8 +96,7 @@ extern "C" void mgpuLaunchClusterKernel(hipFunction_t function, intptr_t cluster
             "[mgpuLaunchClusterKernel] cluster=(%ld,%ld,%ld) requested but "
             "built against HIP_VERSION < 7.2; falling back to "
             "hipModuleLaunchKernel.\n",
-            static_cast<long>(clusterX), static_cast<long>(clusterY),
-            static_cast<long>(clusterZ));
+            static_cast<long>(clusterX), static_cast<long>(clusterY), static_cast<long>(clusterZ));
   }
   HIP_REPORT_IF_ERROR(hipModuleLaunchKernel(function, gridX, gridY, gridZ, blockX, blockY, blockZ,
                                             smem, stream, params, extra));

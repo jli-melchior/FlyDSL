@@ -68,9 +68,7 @@ extern "C" void mgpuLaunchClusterKernel(hipFunction_t function, intptr_t cluster
                                         intptr_t blockY, intptr_t blockZ, int32_t smem,
                                         hipStream_t stream, void **params, void **extra,
                                         size_t /*paramsCount*/) {
-#if defined(HIP_VERSION) && (HIP_VERSION >= 70200000)
-  // ROCm 7.2+: hipLaunchAttributeClusterDimension is functional at runtime
-  // (SWDEV-567096). ROCm 7.0 has the API but cluster attrs are not implemented.
+#ifdef HIP_HAS_CLUSTER_LAUNCH
   hipLaunchAttribute attrs[1];
   attrs[0].id = hipLaunchAttributeClusterDimension;
   attrs[0].value.clusterDim.x = static_cast<unsigned>(clusterX);
@@ -94,8 +92,8 @@ extern "C" void mgpuLaunchClusterKernel(hipFunction_t function, intptr_t cluster
   if ((clusterX > 1) || (clusterY > 1) || (clusterZ > 1)) {
     fprintf(stderr,
             "[mgpuLaunchClusterKernel] cluster=(%ld,%ld,%ld) requested but "
-            "built against HIP_VERSION < 7.2; falling back to "
-            "hipModuleLaunchKernel.\n",
+            "HIP does not support hipLaunchAttributeClusterDimension; "
+            "falling back to hipModuleLaunchKernel.\n",
             static_cast<long>(clusterX), static_cast<long>(clusterY), static_cast<long>(clusterZ));
   }
   HIP_REPORT_IF_ERROR(hipModuleLaunchKernel(function, gridX, gridY, gridZ, blockX, blockY, blockZ,

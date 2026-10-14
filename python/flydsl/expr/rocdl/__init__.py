@@ -65,6 +65,9 @@ __all__ = [
     "sched_dsrd",
     "sched_dswr",
     "schedule_bank",
+    "schedule_vgpr",
+    "schedule_sgpr",
+    "schedule_agpr",
 ]
 
 # Keep references to ODS-generated builders so we can wrap them without losing access.
@@ -107,6 +110,9 @@ mask_dswr = 0x200
 _ods_sched_barrier = globals().get("sched_barrier")
 _ods_sched_group_barrier = globals().get("sched_group_barrier")
 _ods_schedule_bank = globals().get("schedule_bank")
+_ods_schedule_vgpr = globals().get("schedule_vgpr")
+_ods_schedule_sgpr = globals().get("schedule_sgpr")
+_ods_schedule_agpr = globals().get("schedule_agpr")
 
 _SCHED_MASK_INT_TO_KW = {
     0x000: "none",
@@ -182,6 +188,46 @@ def schedule_bank(value, bank, soft=False, **kw):
     """
     val_ir = _to_ir(value)
     return _ods_schedule_bank(res=val_ir.type, value=val_ir, bank=bank, soft=soft or None, **kw)
+
+
+@dsl_loc_tracing
+def schedule_vgpr(value, regnum, soft=False, **kw):
+    """VGPR exact-register scheduling hint.
+
+    Returns *value* unchanged (identity at IR level).  Guides the register
+    allocator to place *value* in the specified VGPR number (0-1023).
+    For wide values (64/128/256-bit), *regnum* is the starting register.
+    Default is strict; pass ``soft=True`` for an advisory hint.
+    """
+    val_ir = _to_ir(value)
+    return _ods_schedule_vgpr(res=val_ir.type, value=val_ir, regnum=regnum, soft=soft or None, **kw)
+
+
+@dsl_loc_tracing
+def schedule_sgpr(value, regnum, soft=False, **kw):
+    """SGPR exact-register scheduling hint.
+
+    Returns *value* unchanged (identity at IR level).  Guides the register
+    allocator to place *value* in the specified SGPR number (0-105).
+    For wide values (64/128/256-bit), *regnum* is the starting register.
+    Default is strict; pass ``soft=True`` for an advisory hint.
+    """
+    val_ir = _to_ir(value)
+    return _ods_schedule_sgpr(res=val_ir.type, value=val_ir, regnum=regnum, soft=soft or None, **kw)
+
+
+@dsl_loc_tracing
+def schedule_agpr(value, regnum, soft=False, **kw):
+    """AGPR exact-register scheduling hint (gfx90a/gfx940).
+
+    Returns *value* unchanged (identity at IR level).  Guides the register
+    allocator to place *value* in the specified AGPR number (0-255).
+    For wide values (64/128/256-bit), *regnum* is the starting register.
+    Default is strict; pass ``soft=True`` for an advisory hint.
+    Only valid on targets with MAI instructions.
+    """
+    val_ir = _to_ir(value)
+    return _ods_schedule_agpr(res=val_ir.type, value=val_ir, regnum=regnum, soft=soft or None, **kw)
 
 
 def _unwrap_mfma_operand(v):

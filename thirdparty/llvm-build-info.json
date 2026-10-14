@@ -24,5 +24,15 @@
     "llvm_build_dir": "build-flydsl-schedule-bank-upstream-oldllvm-vavdst",
     "mlir_install_dir": "mlir_install-schedule-bank-upstream-oldllvm-vavdst",
     "flydsl_build_dir": "build-fly-schedule-bank-upstream-oldllvm-vavdst"
+  },
+
+  "custom-upstream-old-vavdst-schedule-gpr": {
+    "repository": "https://github.com/jli-melchior/llvm-project.git",
+    "branch": "jli/gfx1250/schedule-bank-upstream-oldllvm-waitalu-schedule-gpr",
+    "base": "jli/gfx1250/schedule-bank-upstream-oldllvm-waitalu",
+    "description": "add schedule vgpr/sgpr/apgr",
+    "llvm_build_dir": "build-flydsl-schedule-bank-upstream-oldllvm-vavdst-schedule-gpr",
+    "mlir_install_dir": "mlir_install-schedule-bank-upstream-oldllvm-vavdst-schedule-gpr",
+    "flydsl_build_dir": "build-fly-schedule-bank-upstream-oldllvm-vavdst-schedule-gpr"
   }
 }
